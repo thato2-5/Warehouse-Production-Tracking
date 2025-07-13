@@ -41,3 +41,13 @@ graph LR
     B -->|Email Alerts| D[SMTP Server]
     B -->|File Storage| E[Cloud Storage]
 ```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+graph LR
+    User-->|Login|Auth-->|JWT|API-->|Session|DB
+    Manager-->|Create Task|API-->|INSERT|DB
+    Worker-->|Update Status|API-->|UPDATE|DB
+    System-->|Scheduled Reports|API-->|Aggregate|DB
+```
