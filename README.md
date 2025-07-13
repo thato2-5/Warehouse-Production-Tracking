@@ -51,3 +51,12 @@ graph LR
     Worker-->|Update Status|API-->|UPDATE|DB
     System-->|Scheduled Reports|API-->|Aggregate|DB
 ```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+graph TD
+    F1[API Server] -->|Backup| F2[Load Balancer]
+    F3[Primary DB] -->|Replica| F4[Standby DB]
+    F5[SMTP] -->|Fallback| F6[SMS Gateway]
+```
