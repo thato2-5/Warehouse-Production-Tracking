@@ -97,3 +97,117 @@ erDiagram
         date created_at
     }
 ```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+classDiagram
+    class UserController {
+        +login()
+        +logout()
+    }
+    class DatabaseService {
+        +query()
+        +update()
+    }
+    UserController --> DatabaseService : "Uses"
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+stateDiagram-v2
+    [*] --> SplashScreen
+    SplashScreen --> Login
+    Login --> Home: Success
+    Login --> Error: Failed
+    Home --> Settings
+    Home --> Logout
+    Logout --> Login
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+flowchart TD
+    A[Mobile App] -->|API Call| B[Backend]
+    B -->|SQL Query| C[(Database)]
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+erDiagram
+    CUSTOMER ||--o{ TICKET : "has"
+    COUNTER ||--o{ TICKET : "processes"
+    TICKET }|--|| COUNTER : "assigned to"
+
+    CUSTOMER {
+        integer id PK
+        varchar(100) name
+        varchar(20) phone
+        integer ticket_id FK
+    }
+
+    TICKET {
+        integer id PK
+        varchar(20) number UK
+        varchar(20) status
+        datetime created_at
+        datetime called_at
+        datetime completed_at
+        integer counter_id FK
+        boolean unsuccessful
+        varchar(100) reason
+    }
+
+    COUNTER {
+        integer id PK
+        varchar(50) name
+        boolean is_active
+        integer current_ticket_id FK
+    }
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+classDiagram
+    class Customer {
+        +id: integer (PK)
+        +name: varchar(100)
+        +phone: varchar(20)
+        +ticket_id: integer (FK)
+    }
+
+    class Ticket {
+        +id: integer (PK)
+        +number: varchar(20) (UQ)
+        +status: varchar(20)
+        +created_at: datetime
+        +called_at: datetime
+        +completed_at: datetime
+        +counter_id: integer (FK)
+        +unsuccessful: boolean
+        +reason: varchar(100)
+    }
+
+    class Counter {
+        +id: integer (PK)
+        +name: varchar(50)
+        +is_active: boolean
+        +current_ticket_id: integer (FK)
+    }
+
+    Customer "1" --> "1" Ticket : has
+    Counter "1" --> "0..1" Ticket : processes
+    Ticket "0..1" --> "1" Counter : assigned to
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+```
