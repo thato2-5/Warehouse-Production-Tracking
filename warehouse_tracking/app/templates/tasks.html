@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Task Management</h1>
+
+<div class="mb-3">
+    <a href="{{ url_for('main.create_task') }}" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Add New Task
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Assigned To</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Due Date</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.title }}</td>
+                <td>{{ task.assigned_to.name if task.assigned_to else 'Unassigned' }}</td>
+                <td>
+                    <span class="badge 
+                        {% if task.status == 'Completed' %}bg-success
+                        {% elif task.status == 'In Progress' %}bg-warning text-dark
+                        {% elif task.status == 'Pending' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
+                        {{ task.status }}
+                    </span>
+                </td>
+                <td>{{ task.priority }}</td>
+                <td>{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}</td>
+                <td>{{ task.task_type }}</td>
+                <td>
+                    <a href="{{ url_for('main.view_task', task_id=task.id) }}" class="btn btn-sm btn-info">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ url_for('main.edit_task', task_id=task.id) }}" class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

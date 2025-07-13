@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <h1 class="mb-4">Warehouse Dashboard</h1>
+    
+    <!-- Summary Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Tasks</h5>
+                <h2 class="card-text">{{ total_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <h2 class="card-text">{{ completed_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h5 class="card-title">In Progress</h5>
+                <h2 class="card-text">{{ in_progress_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5 class="card-title">Pending</h5>
+                <h2 class="card-text">{{ pending_tasks }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                Task Status Distribution
+            </div>
+            <div class="card-body">
+                <canvas id="taskStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                Task Types
+            </div>
+            <div class="card-body">
+                <canvas id="taskTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                Employee Productivity (Tasks Completed)
+            </div>
+            <div class="card-body">
+                <canvas id="productivityChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                Employee Efficiency
+            </div>
+            <div class="card-body">
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Task Status Chart
+fetch('/api/task_status_data')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('taskStatusChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    data: Object.values(data),
+                    backgroundColor: [
+                        '#28a745', // green
+                        '#ffc107', // yellow
+                        '#dc3545', // red
+                        '#6c757d'  // gray
+                    ]
+                }]
+            }
+        });
+    });
+
+// Task Type Chart
+fetch('/api/task_type_data')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('taskTypeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Number of Tasks',
+                    data: Object.values(data),
+                    backgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// Productivity Chart
+fetch('/api/employee_performance')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('productivityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(item => item.name),
+                datasets: [{
+                    label: 'Tasks Completed',
+                    data: data.map(item => item.tasks_completed),
+                    backgroundColor: '#17a2b8'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+
+// Efficiency Chart
+fetch('/api/employee_performance')
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById('efficiencyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(item => item.name),
+                datasets: [{
+                    label: 'Efficiency %',
+                    data: data.map(item => item.efficiency),
+                    backgroundColor: '#20c997'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
