@@ -323,10 +323,319 @@ flowchart LR
 # Warehouse-Production-Tracking
 
 ``` mermaid
-
+graph TD
+    A[Web Browser] --> B[Flask Application]
+    B --> C[Authentication System]
+    B --> D[Database Models]
+    B --> E[Report Generation]
+    C --> F[User Login/Logout]
+    C --> G[Registration]
+    C --> H[Password Hashing]
+    D --> I[Technical Installation]
+    D --> J[Exhaust Inspection]
+    D --> K[Plant Inspection]
+    D --> L[Certificate Models]
+    E --> M[Word Export]
+    E --> N[Excel Export]
+    E --> O[PDF Export]
+    B --> P[Activity Logging]
+    B --> Q[File Upload Handling]
 ```
 
 # Warehouse-Production-Tracking
 
 ``` mermaid
+erDiagram
+    USER ||--o{ USER_ACTIVITY : has
+    USER {
+        int id PK
+        string username
+        string email
+        string password_hash
+        string profile_picture
+    }
+    
+    USER_ACTIVITY {
+        int id PK
+        int user_id FK
+        string activity_type
+        string description
+        string ip_address
+        string user_agent
+        datetime created_at
+    }
+    
+    PLANT_INSPECTION ||--o{ FUEL_SYSTEM : has
+    PLANT_INSPECTION ||--o{ LUBE_SYSTEM : has
+    PLANT_INSPECTION ||--o{ AIR_FILTRATION : has
+    
+    PLANT_INSPECTION {
+        int PlantInspectionID PK
+        string CustomerName
+        string CustomerSite
+        string Date
+        string Time
+        binary PhotoOfEquipmentInspected
+    }
+    
+    FUEL_SYSTEM {
+        int id PK
+        int InspectionID FK
+        string PrimaryFuelFilterPartNumber
+        binary PrimaryFuelFilterPhoto
+    }
+    
+    LUBE_SYSTEM {
+        int id PK
+        int InspectionID FK
+        string OilFilterPartNumber
+        binary OilFilterPhoto
+    }
+    
+    AIR_FILTRATION {
+        int id PK
+        int InspectionID FK
+        string AirCleanerModel
+        binary AirCleanerArrangementPhoto
+    }
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Flask
+    participant Database
+    
+    User->>Browser: Enters credentials
+    Browser->>Flask: POST /login
+    Flask->>Database: Query user by username
+    Database-->>Flask: User record
+    alt Valid credentials
+        Flask->>Flask: Create session
+        Flask->>Database: Log activity
+        Flask-->>Browser: Redirect to dashboard
+    else Invalid credentials
+        Flask-->>Browser: Show error message
+    end
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+flowchart TD
+    A[Start] --> B{Report Type?}
+    B -->|Word| C[Create Document]
+    B -->|Excel| D[Create DataFrame]
+    B -->|PDF| E[Create PDF Template]
+    C --> F[Add Tables/Content]
+    D --> G[Format Spreadsheet]
+    E --> H[Build PDF Elements]
+    F --> I[Save to Buffer]
+    G --> I
+    H --> I
+    I --> J[Send File to User]
+    J --> K[End]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> FileSelected: User selects file
+    FileSelected --> Validation: Submit
+    Validation --> ValidFile: Extension allowed
+    Validation --> InvalidFile: Extension not allowed
+    ValidFile --> Processing: Save to uploads folder
+    Processing --> DatabaseUpdate: Store filename
+    DatabaseUpdate --> Success
+    InvalidFile --> Error: Show message
+    Success --> [*]
+    Error --> [*]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+gantt
+    title Activity Logging Timeline
+    dateFormat  YYYY-MM-DD HH:mm
+    section User Session
+    Login           :a1, 2023-01-01 09:00, 5m
+    Page Views      :a2, after a1, 30m
+    Form Submission :a3, after a2, 10m
+    Logout          :a4, after a3, 2m
+    
+    section System
+    DB Log Entry    :crit, 2023-01-01 09:00, 1m
+    DB Log Entry    :crit, after a2, 1m
+    DB Log Entry    :crit, after a3, 1m
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+journey
+    title User Management Process
+    section Admin
+      Create User: 5: Admin
+      Edit User: 3: Admin
+      View Logs: 4: Admin
+    section User
+      Register: 5: User
+      Login: 5: User
+      Update Profile: 4: User
+    section System
+      Hash Password: 5: System
+      Verify Credentials: 5: System
+      Log Activity: 5: System
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+graph TD
+    A[User] -->|HTTP Requests| B[Flask Application]
+    B --> C[(MariaDB Database)]
+    B --> D[Report Generation]
+    B --> E[File Storage]
+    C --> F[User Management]
+    C --> G[Technical Installations]
+    C --> H[Exhaust Inspections]
+    C --> I[Plant Inspections]
+    C --> J[Certificates]
+    D --> K[Word/Excel/PDF]
+    E --> L[Uploaded Images]
+    F --> M[Authentication]
+    F --> N[Activity Logging]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+graph TD
+    A[DoForms System] --> B1[User Management]
+    A --> B2[Form Management]
+    A --> B3[Reporting]
+    A --> B4[Administration]
+    
+    B1 --> C1[Registration]
+    B1 --> C2[Authentication]
+    B1 --> C3[Profile Management]
+    
+    B2 --> C4[Technical Installation]
+    B2 --> C5[Exhaust Inspection]
+    B2 --> C6[Plant Inspection]
+    B2 --> C7[Certificate Generation]
+    
+    B3 --> C8[Word Reports]
+    B3 --> C9[Excel Export]
+    B3 --> C10[PDF Generation]
+    
+    B4 --> C11[Activity Logs]
+    B4 --> C12[System Monitoring]
+    
+    C4 --> D1[Equipment Data]
+    C4 --> D2[Installation Photos]
+    C4 --> D3[Warranty Tracking]
+    
+    C6 --> D4[Fuel System]
+    C6 --> D5[Lube System]
+    C6 --> D6[Air Filtration]
+    C6 --> D7[12+ Subsystems]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+flowchart TB
+    subgraph UserJourney
+        A[Login] --> B[Select Form Type]
+        B --> C{Type?}
+        C -->|Technical| D[Fill Installation Data]
+        C -->|Exhaust| E[Complete Inspection]
+        C -->|Plant| F[Detailed Equipment Check]
+        D --> G[Upload Photos]
+        E --> G
+        F --> G
+        G --> H[Submit Form]
+        H --> I[Generate Report]
+        I --> J[Email/Save]
+    end
+    
+    subgraph SystemProcess
+        H --> K[DB Persistence]
+        I --> L[Report Rendering]
+        K --> M[Data Validation]
+        L --> N[Format Conversion]
+        M --> O[Activity Log]
+    end
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+graph LR
+    U[User] -->|Form Data| W[Web Interface]
+    W -->|POST Requests| A[Flask App]
+    A -->|CRUD Operations| D[(Database)]
+    A -->|File Storage| F[File System]
+    D -->|Query Results| A
+    A -->|Render| T[Templates]
+    T -->|HTML| W
+    A -->|Generate| R[Reports]
+    R -->|PDF/Word/Excel| W
+    F -->|Images| T
+    A -->|Log| L[Activity DB]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
 ```
