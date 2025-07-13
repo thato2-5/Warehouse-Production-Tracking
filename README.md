@@ -60,3 +60,40 @@ graph TD
     F3[Primary DB] -->|Replica| F4[Standby DB]
     F5[SMTP] -->|Fallback| F6[SMS Gateway]
 ```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+sequenceDiagram
+    participant MobileApp
+    participant Backend
+    participant Database
+    participant WebPortal
+
+    MobileApp->>Backend: POST /login (Credentials)
+    Backend->>Database: SELECT user
+    Database-->>Backend: User Data
+    Backend-->>MobileApp: JWT Token
+
+    WebPortal->>Backend: GET /analytics
+    Backend->>Database: Aggregate Data
+    Database-->>Backend: Results
+    Backend-->>WebPortal: Dashboard HTML
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+erDiagram
+    USER ||--o{ ORDER : "places"
+    USER {
+        int id PK
+        string name
+        string email
+    }
+    ORDER {
+        int id PK
+        int user_id FK
+        date created_at
+    }
+```
