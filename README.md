@@ -210,4 +210,123 @@ classDiagram
 # Warehouse-Production-Tracking
 
 ``` mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> TicketCreation: "Create Ticket"
+    TicketCreation --> TicketCreated: "Submit"
+    TicketCreated --> Waiting: "Queue"
+    
+    state Waiting {
+        [*] --> InQueue
+        InQueue --> Called: "Counter calls"
+        Called --> Serving
+        Serving --> Completed: "Service finished"
+        Serving --> Unsuccessful: "Service failed"
+    }
+    
+    Completed --> [*]
+    Unsuccessful --> [*]
+    TicketCreated --> [*]: "Cancel"
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+sequenceDiagram
+    participant MobileApp
+    participant API
+    participant Database
+    
+    MobileApp->>API: POST /tickets (create new ticket)
+    API->>Database: INSERT ticket
+    Database-->>API: New ticket ID
+    API-->>MobileApp: Ticket details (with number)
+    
+    MobileApp->>API: GET /tickets/{number} (poll status)
+    alt Ticket not called
+        API-->>MobileApp: "In Queue"
+    else Ticket called
+        API->>Database: UPDATE ticket status
+        API-->>MobileApp: "Called - Counter 3"
+    end
+    
+    CounterSystem->>API: PUT /counters/{id}/current_ticket
+    API->>Database: UPDATE counter and ticket
+```
+
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+gantt
+    title Ticket System Development Timeline
+    dateFormat  YYYY-MM-DD
+    section Core
+    Database Design       :done,    db1, 2024-01-01, 7d
+    API Development      :active,  api1, 2024-01-08, 14d
+    Mobile App UI        :         ui1, 2024-01-22, 21d
+    section Counter System
+    Counter Hardware     :         hard1, 2024-01-15, 14d
+    Counter Software     :         soft1, 2024-01-29, 14d
+    section Testing
+    Unit Tests           :         test1, 2024-02-12, 7d
+    Integration Testing  :         test2, 2024-02-19, 7d
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+flowchart TD
+    A[Start] --> B{Customer Action}
+    B -->|New Ticket| C[Generate Ticket Number]
+    C --> D[Save to Database]
+    D --> E[Display Ticket Info]
+    
+    B -->|Check Status| F[Query Ticket]
+    F --> G{Status?}
+    G -->|In Queue| H[Show Position]
+    G -->|Called| I[Display Counter]
+    G -->|Completed| J[Show Feedback]
+    
+    K[Counter Interface] --> L{Next Ticket}
+    L --> M[Call Next in Queue]
+    M --> N[Update Status]
+    N --> O[Display Current Ticket]
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+stateDiagram-v2
+    [*] --> Ready
+    Ready --> Calling: "Call next ticket"
+    Calling --> Serving: "Customer arrives"
+    Serving --> Completed: "Finish service"
+    Serving --> Unsuccessful: "Customer missing"
+    Completed --> Ready
+    Unsuccessful --> Ready
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+flowchart LR
+    Created --> Queued
+    Queued --> Called
+    Called --> Served
+    Called --> Missed
+    Served --> Completed
+    Missed --> Requeued
+    Requeued --> Called
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
+
+```
+
+# Warehouse-Production-Tracking
+
+``` mermaid
 ```
